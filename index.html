@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<title>Najwa — Final Lock ✨</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif}
+body{
+  height:100vh;
+  background:radial-gradient(circle at top,#1a1d4d,#03010a 75%);
+  overflow:hidden;
+  color:white;
+}
+#sky{position:fixed;inset:0;z-index:0}
+.star{position:absolute;width:2px;height:2px;background:white;opacity:.6;animation:twinkle 3s infinite}
+@keyframes twinkle{50%{opacity:1}}
+.meteor{position:absolute;width:160px;height:2px;background:linear-gradient(90deg,white,transparent);animation:meteor 1s linear forwards}
+@keyframes meteor{to{transform:translate(-420px,420px);opacity:0}}
+
+.center{position:relative;z-index:2;height:100vh;display:flex;justify-content:center;align-items:center}
+.card{
+  background:rgba(255,255,255,.15);
+  backdrop-filter:blur(25px);
+  padding:35px;border-radius:30px;
+  width:90%;max-width:420px;text-align:center;
+  box-shadow:0 40px 140px rgba(0,0,0,.85);
+}
+.age{font-size:4em;text-shadow:0 0 40px white;animation:pulse 1.6s infinite}
+@keyframes pulse{50%{transform:scale(1.3)}}
+
+.buttons{display:grid;gap:12px;margin-top:20px}
+button{
+  padding:16px;border:none;border-radius:40px;
+  font-weight:bold;color:white;
+  background:linear-gradient(135deg,#ff6f91,#ff4f7a);
+}
+
+.lock,.popup{
+  position:fixed;inset:0;
+  background:rgba(0,0,0,.75);
+  display:none;justify-content:center;align-items:center;
+  z-index:10;
+}
+.box{
+  background:linear-gradient(135deg,#fbc2eb,#ff9a9e);
+  border-radius:30px;padding:30px;
+  max-width:420px;text-align:center;
+}
+.close{margin-top:20px;padding:12px 28px;border:none;border-radius:30px}
+
+/* 🎭 POPUP ANIMATIONS */
+.heartGlow{animation:heart 1.5s infinite}
+@keyframes heart{50%{text-shadow:0 0 30px #fff}}
+
+.sakura span{
+  position:absolute;
+  animation:sakura 3s linear infinite;
+}
+@keyframes sakura{
+  to{transform:translateY(300px) rotate(360deg);opacity:0}
+}
+
+.moon{
+  width:80px;height:80px;border-radius:50%;
+  background:#fff;box-shadow:0 0 30px #fff;
+  margin:10px auto;animation:moon 2s infinite;
+}
+@keyframes moon{50%{transform:scale(1.2)}}
+
+.spark span{
+  position:absolute;width:6px;height:6px;
+  background:white;border-radius:50%;
+  animation:spark 1s ease-out infinite;
+}
+@keyframes spark{to{transform:scale(4);opacity:0}}
+
+.finalExplosion{
+  animation:flash 1.2s ease;
+}
+@keyframes flash{50%{background:white;color:black}}
+</style>
+</head>
+
+<body>
+
+<div id="sky"></div>
+
+<div class="lock" id="lock" style="display:flex">
+  <div class="box">
+    <h2>💖 Untuk Najwa 💖</h2>
+    <input id="pass" type="password" placeholder="password"
+      style="padding:12px;border-radius:25px;border:none;width:100%;margin-top:10px">
+    <button class="close" onclick="unlock()">Masuk ✨</button>
+  </div>
+</div>
+
+<div class="center">
+  <div class="card">
+    <h1>Happy Birthday</h1>
+    <h2>Najwa ✨</h2>
+    <div class="age">23</div>
+    <div class="buttons">
+      <button onclick="openPopup(1)">💖 Tentang Kamu</button>
+      <button onclick="openPopup(2)">🌸 Harapan</button>
+      <button onclick="openPopup(3)">🌙 Doa</button>
+      <button onclick="openPopup(4)">✨ Kenangan</button>
+      <button onclick="openPopup(5)">💌 Akhir</button>
+    </div>
+  </div>
+</div>
+
+<div class="popup" id="popup">
+  <div class="box" id="box">
+    <div id="anim"></div>
+    <h3 id="title"></h3>
+    <p id="text"></p>
+    <button class="close" onclick="popup.style.display='none'">Tutup</button>
+  </div>
+</div>
+
+<audio id="music" loop>
+  <source src="sparkle.mp3">
+</audio>
+
+<script>
+/* STARS */
+for(let i=0;i<220;i++){
+ let s=document.createElement("div");
+ s.className="star";
+ s.style.left=Math.random()*100+"vw";
+ s.style.top=Math.random()*100+"vh";
+ sky.appendChild(s);
+}
+
+/* METEOR */
+setInterval(()=>{
+ if(Math.random()<0.3){
+  let m=document.createElement("div");
+  m.className="meteor";
+  m.style.left=Math.random()*100+"vw";
+  m.style.top=Math.random()*40+"vh";
+  sky.appendChild(m);
+  setTimeout(()=>m.remove(),1000);
+ }
+},2300);
+
+function unlock(){
+ if(pass.value==="najwa"){
+  lock.style.display="none";
+  music.play();
+ }
+}
+
+const content={
+1:["Tentang Kamu","Kamu adalah rumah yang tenang.","heart"],
+2:["Harapan","Semoga hidup selalu lembut padamu.","sakura"],
+3:["Doa","Semoga Tuhan menjaga hatimu.","moon"],
+4:["Kenangan","Setiap cerita bersamamu istimewa.","spark"],
+5:["Akhir","Terima kasih sudah ada.","final"]
+}
+
+function openPopup(i){
+ popup.style.display="flex";
+ title.innerText=content[i][0];
+ text.innerText=content[i][1];
+ anim.innerHTML="";
+ box.className="box";
+
+ if(content[i][2]==="heart"){
+  anim.innerHTML="💖";
+  anim.className="heartGlow";
+ }
+ if(content[i][2]==="sakura"){
+  anim.className="sakura";
+  for(let j=0;j<8;j++){
+   let sp=document.createElement("span");
+   sp.innerHTML="🌸";
+   sp.style.left=Math.random()*200+"px";
+   anim.appendChild(sp);
+  }
+ }
+ if(content[i][2]==="moon"){
+  anim.innerHTML='<div class="moon"></div>';
+ }
+ if(content[i][2]==="spark"){
+  anim.className="spark";
+  for(let j=0;j<10;j++){
+   let sp=document.createElement("span");
+   sp.style.left="50%";
+   sp.style.top="50%";
+   anim.appendChild(sp);
+  }
+ }
+ if(content[i][2]==="final"){
+  box.classList.add("finalExplosion");
+ }
+}
+</script>
+
+</body>
+</html>
